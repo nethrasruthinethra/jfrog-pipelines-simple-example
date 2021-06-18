@@ -1,23 +1,25 @@
-resources:
+
+  resources:
   - name: myGitRepo
     type: GitRepo
     configuration:
       gitProvider: my_github
-      path: nethrasruthinethra/jfrog-pipelines-simple-example
+      path: nethrasruthinethra/jfrog-pipelines-simple-example   # replace jfrog with your username or org name
       branches:
         include: master
   - name: myBuildInfo
     type: BuildInfo
     configuration:
-     sourceArtifactory: https://nethratestinstance.jfrog.io/artifactory/nuget
+      sourceArtifactory: myArt
       buildName: SampleApp
-      buildNumber: 1          
-pipelines:  
+      buildNumber: 1   
+      
+pipelines: 
   - name: basic_pipeline
     configuration:
       environmentVariables:
         readOnly:
-          my_env_var: "hello"  
+          my_env_var: "hello" 
     steps:
       - name: step_1
         type: Bash
@@ -25,7 +27,7 @@ pipelines:
           inputResources:
             - name: myGitRepo
           outputResources:
-            - name: myBuildInfo             
+            - name: myBuildInfo            
         execution:
           onExecute:
             - echo $my_env_var
@@ -36,7 +38,7 @@ pipelines:
         type: Bash
         configuration:
           inputResources:
-            - name: myBuildInfo            
+            - name: myBuildInfo           
           runtime:
             type: image
             image:
@@ -45,36 +47,5 @@ pipelines:
                 versions: ['11']
         execution:
           onExecute:
-            - echo $run_var  
+            - echo $run_var 
             - echo $res_myBuildInfo_buildNumber
-
-      - name: step_3
-        type: Bash
-        configuration:
-          environmentVariables:
-            step_env_var1: "hello"
-          inputSteps:
-            - name: step_2
-        execution:
-          onExecute:
-            - echo $step_env_var1
-
-      - name: step_4
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: step_2
-        execution:
-          onExecute:
-            - echo $app_version
-      - name: step_5
-        type: Bash
-        configuration:
-          inputSteps:
-            - name: step_3
-            - name: step_4  
-          integrations:
-            - name: my_github            
-        execution:
-          onExecute:
-            - 'curl -H "Authorization: token $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 $https://github.com/nethrasruthinethra/jfrog-pipelines-simple-example/rate_limit'
