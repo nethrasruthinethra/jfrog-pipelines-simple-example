@@ -13,7 +13,7 @@
       sourceArtifactory: myArt
       buildName: SampleApp
       buildNumber: 1   
- pipelines: 
+pipelines: 
   - name: basic_pipeline
     configuration:
       environmentVariables:
